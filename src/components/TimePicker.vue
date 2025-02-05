@@ -1,5 +1,5 @@
 <template>
-  <div class="time-picker" :class="currentTheme">
+  <div class="time-picker">
     <!-- Кнопка выбора времени, на которой показывается выбранное время (если уже выбрано) -->
     <button class="select-time-button" @click="openModal">
       {{ selectedSlot ? formatSlot(selectedSlot) : 'Выбрать время' }}
@@ -9,17 +9,6 @@
     <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
       <div class="modal-content">
         <h3>Выберите время</h3>
-
-        <!-- Блок переключения темы -->
-        <div class="theme-toggle">
-          <span
-            >Текущая тема:
-            {{ currentTheme === 'day' ? 'Дневная' : 'Ночная' }}</span
-          >
-          <button class="toggle-theme-button" @click="toggleTheme">
-            Переключить тему
-          </button>
-        </div>
 
         <!-- Список слотов -->
         <div class="slots-container">
@@ -83,15 +72,13 @@ export default defineComponent({
     },
   },
   emits: ['update:datetime'],
-  setup(props, { emit }) {
+  setup(_props, { emit }) {
     // Флаг отображения модального окна
     const isModalOpen = ref<boolean>(false);
     // Список временных слотов (имитация получения по API)
     const slots = ref<TimeSlot[]>([]);
     // Выбранный слот
     const selectedSlot = ref<TimeSlot | null>(null);
-    // Текущая тема: "day" или "night" (по умолчанию дневная)
-    const currentTheme = ref<'day' | 'night'>('day');
 
     // Открытие модального окна и загрузка слотов
     const openModal = (): void => {
@@ -218,7 +205,10 @@ export default defineComponent({
         },
       ];
       // Имитируем задержку ответа
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise<void>((resolve: () => void) =>
+        setTimeout(resolve, 500)
+      );
+
       slots.value = simulatedResponse;
     };
 
@@ -229,22 +219,15 @@ export default defineComponent({
       return `${format(startDate, 'HH:mm')} - ${format(finishDate, 'HH:mm')}`;
     };
 
-    // Переключение темы
-    const toggleTheme = (): void => {
-      currentTheme.value = currentTheme.value === 'day' ? 'night' : 'day';
-    };
-
     return {
       isModalOpen,
       slots,
       selectedSlot,
-      currentTheme,
       openModal,
       closeModal,
       selectSlot,
       confirmSelection,
       formatSlot,
-      toggleTheme,
     };
   },
 });
@@ -257,29 +240,6 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   padding: 1rem;
-}
-
-/* Стили для блока переключения темы */
-.theme-toggle {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  color: var(--tg-theme-text-color);
-}
-
-.theme-toggle span {
-  font-weight: bold;
-}
-
-.toggle-theme-button {
-  background-color: var(--tg-theme-button-color);
-  color: #fff;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  cursor: pointer;
 }
 
 /* Кнопка выбора времени */
@@ -389,21 +349,5 @@ export default defineComponent({
   .modal-content {
     padding: 2rem;
   }
-}
-
-/* Тематические стили */
-/* Дневная тема — можно использовать глобальные переменные (они заданы в корне приложения) */
-.time-picker.day {
-  /* Дополнительных переопределений не требуется */
-}
-
-/* Ночная тема: переопределяем CSS-переменные для улучшения читаемости */
-.time-picker.night {
-  --tg-theme-bg-color: #111;
-  --tg-theme-secondary-bg-color: #222;
-  --tg-theme-text-color: #fff;
-  --tg-theme-button-color: #3b82f6;
-  --tg-theme-header-bg-color: #1f2937;
-  --tg-theme-hint-color: #ccc;
 }
 </style>
