@@ -14,4 +14,4 @@ npm install
 
 # Результаты
 
-![Запуск 1](assets/1.png)
+![Запуск 1](src/assets/1.png)
