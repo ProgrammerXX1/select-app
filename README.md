@@ -1,12 +1,12 @@
 # Vue 3 + TypeScript + Vite
 
-Запуск
+# Запуск
 
-# npm run dev
+npm run dev
 
-Установка
+# Установка
 
-# npm install
+npm install
 
 # Препупреждение
 
